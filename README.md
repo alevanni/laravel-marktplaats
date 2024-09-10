@@ -1,0 +1,1 @@
+Database schema (work in progress): https://dbdiagram.io/d/marktplaats-66696835a179551be6ae7c85
