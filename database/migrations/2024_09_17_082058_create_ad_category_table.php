@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bids', function (Blueprint $table) {
+        Schema::create('ad_category', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
             $table->foreignId('ad_id');
-            $table->decimal('amount', 6, 2);
+            $table->foreignId('category_id');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bids');
+        Schema::dropIfExists('ad_category');
     }
 };

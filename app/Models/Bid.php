@@ -13,7 +13,7 @@ class Bid extends Model
         'user_id',
         'ad_id',
         'amount',
-        'price',
+        
     ];
 
     public function user()

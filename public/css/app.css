@@ -1,0 +1,22 @@
+body {
+    background-color: rgb(219, 213, 213);
+}
+
+.my-nav li {
+    margin: 10px; 
+    display: inline-block;
+    
+}
+
+.my-nav {
+    background-color: rgb(149, 173, 144);
+}
+
+table td {
+    background-color:aquamarine;
+}
+
+
+.validation-errors {
+    list-style-type: "\1f6a9";
+}
