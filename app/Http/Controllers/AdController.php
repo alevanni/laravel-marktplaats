@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdController extends Controller
 {
@@ -11,7 +12,8 @@ class AdController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        return view('index', compact('user'));
     }
 
     /**

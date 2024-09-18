@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
+use App\Mail\RegistrationSuccess;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -31,6 +33,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $user = User::create($validated);
+        Mail::to($user)->send(new RegistrationSuccess($user));
         return redirect()->route('index', compact('user'));
         //dd($validated);
     }

@@ -3,5 +3,5 @@
 @section('title', 'Marketplace')
 
 @section('content')
-    <p>This is the content for the page.</p>
+<p>Hello {{ empty($user)? 'guest' : $user->full_name }}. This is the content for the page.</p>
 @endsection

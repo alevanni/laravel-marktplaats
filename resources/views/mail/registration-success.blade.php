@@ -1,0 +1,1 @@
+Hello {{ $name }}! You are now registered to our marketplace!

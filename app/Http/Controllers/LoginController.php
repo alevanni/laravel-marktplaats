@@ -16,26 +16,27 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            $user=Auth::user();
-            return redirect()->route('index', compact('user'));
+            $user = Auth::user();
+            //dd($user->full_name);
+            return redirect()->route('index');
         }
- 
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
 
-    public function logOut() {
+    public function logOut()
+    {
 
         Auth::logout();
 
         return view('login');
-
     }
-     /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -54,10 +55,7 @@ class LoginController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
-    {
-        
-    }
+    public function store(StoreUserRequest $request) {}
 
     /**
      * Display the specified resource.
