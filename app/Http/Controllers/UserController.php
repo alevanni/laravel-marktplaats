@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Mail\RegistrationSuccess;
 use App\Models\User;
+use App\Models\Ad;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -14,8 +17,10 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
+    {   
+        $user = Auth::user();
+        $ads = Ad::whereBelongsTo($user)->orderBy('created_at', 'desc')->get();
+        return view('dashboard', compact('user', 'ads'));
     }
 
     /**
@@ -32,9 +37,12 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
+        $validated['remember_token'] =  Str::random(10);
+        $validated['email_verified_at'] = now();
         $user = User::create($validated);
         Mail::to($user)->send(new RegistrationSuccess($user));
-        return redirect()->route('index', compact('user'));
+        //dd($user->full_name);
+        return redirect()->route('login');
         //dd($validated);
     }
 

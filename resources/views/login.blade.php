@@ -3,7 +3,7 @@
 @section('title', 'Register')
 
 @section('content')
-<h2>Create your account</h2>
+<h2>Login:</h2>
 
 <form action="{{ route('users.login') }}" method="POST">
     @csrf
@@ -31,4 +31,12 @@
     </ul>
 </div>
 @endif
+
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
+
+<div><a href="{{ route('password.request') }}">Forgot your password?</a></div>
 @endsection

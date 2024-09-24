@@ -20,3 +20,10 @@ table td {
 .validation-errors {
     list-style-type: "\1f6a9";
 }
+
+.card {
+    padding: 10px;
+    width: 20%;
+    border: 1px solid black;
+    display: inline-block;
+}

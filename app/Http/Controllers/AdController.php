@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreAdRequest;
+use App\Models\Ad;
 
 class AdController extends Controller
 {
@@ -21,15 +23,30 @@ class AdController extends Controller
      */
     public function create()
     {
-        //
+        $user = Auth::user();
+        if ($user == null) return redirect()->route('login');
+        
+        else {
+            return view('ads.create', compact('user'));
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAdRequest $request)
     {
-        //
+        //dd($request);
+        $user = Auth::user();
+        
+        if ($user == null) return redirect()->route('login');
+
+        $validated = $request->validated();
+        $validated['user_id'] = $user->id;
+        $validated['priority'] = 0;
+        Ad::create($validated);
+
+        return redirect('dashboard');
     }
 
     /**
@@ -37,7 +54,7 @@ class AdController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('ads.show');
     }
 
     /**
