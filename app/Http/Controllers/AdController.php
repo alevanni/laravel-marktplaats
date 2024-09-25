@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAdRequest;
 use App\Models\Ad;
+use App\Http\Requests\UpdateAdRequest;
 
 class AdController extends Controller
 {
@@ -21,11 +22,12 @@ class AdController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+
         $user = Auth::user();
         if ($user == null) return redirect()->route('login');
-        
+
         else {
             return view('ads.create', compact('user'));
         }
@@ -38,7 +40,7 @@ class AdController extends Controller
     {
         //dd($request);
         $user = Auth::user();
-        
+
         if ($user == null) return redirect()->route('login');
 
         $validated = $request->validated();
@@ -52,7 +54,7 @@ class AdController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Ad $ad)
     {
         return view('ads.show');
     }
@@ -60,17 +62,31 @@ class AdController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Ad $ad)
     {
-        //
+        $user = Auth::user();
+        if ($user == null) return redirect()->route('login');
+
+        return view('ads.edit', compact('user', 'ad'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateAdRequest $request, Ad $ad)
     {
-        //
+        /*$user = Auth::user();
+
+        if ($user == null) return redirect()->route('login');*/
+        if ($request->user()->cannot('update', $ad)) {
+            abort(403);
+        }
+
+        $validated = $request->validated();
+        $ad->timestamps = false;
+        $ad->update($validated);
+
+        return redirect('dashboard');
     }
 
     /**
