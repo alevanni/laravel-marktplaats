@@ -10,7 +10,7 @@
 <div>
     <h3>{{$user->full_name}}'s ads:</h3>
     @foreach ($ads as $ad)
-    @include('partials.card', ['ad' => $ad])
+    @include('partials.dashboard-card', ['ad' => $ad])
     @endforeach
 </div>
 @endsection

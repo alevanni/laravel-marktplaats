@@ -21,6 +21,7 @@ class AdFactory extends Factory
             'user_id'=>User::inRandomOrder()->first()->id,
             'description' => $this->faker->paragraph(10),
             'price' => $this->faker->randomFloat(2, 0, 4999.99),
+            'active' => $this->faker->boolean(50),
             'priority' => $this->faker->boolean(50),
             'updated_at' => now(),
         ];

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAdRequest;
 use App\Models\Ad;
 use App\Http\Requests\UpdateAdRequest;
+use App\Models\Bid;
 
 class AdController extends Controller
 {
@@ -16,7 +17,8 @@ class AdController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('index', compact('user'));
+        $ads = Ad::with('user', 'categories')->where('active', 1)->orderBy('created_at', 'desc')->get();
+        return view('index', compact('user', 'ads'));
     }
 
     /**
@@ -26,11 +28,11 @@ class AdController extends Controller
     {
 
         $user = Auth::user();
+
         if ($user == null) return redirect()->route('login');
 
-        else {
-            return view('ads.create', compact('user'));
-        }
+        else  return view('ads.create', compact('user'));
+        
     }
 
     /**
@@ -38,13 +40,16 @@ class AdController extends Controller
      */
     public function store(StoreAdRequest $request)
     {
-        //dd($request);
         $user = Auth::user();
-
+        
         if ($user == null) return redirect()->route('login');
+        // is this useless?
+        if ($request->user()->cannot('create', Ad::class)) {
+            abort(403);
+        }
 
         $validated = $request->validated();
-        $validated['user_id'] = $user->id;
+        $validated['user_id'] = $request->user()->id;
         $validated['priority'] = 0;
         Ad::create($validated);
 
@@ -56,16 +61,25 @@ class AdController extends Controller
      */
     public function show(Ad $ad)
     {
-        return view('ads.show');
+        $user = Auth::user();
+
+        $bids=Bid::where('ad_id', $ad->id)->with('user')->orderBy('amount', 'desc')->get();
+        
+        return view('ads.show', compact('user', 'ad', 'bids'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ad $ad)
+    public function edit(Request $request, Ad $ad)
     {
         $user = Auth::user();
+        
         if ($user == null) return redirect()->route('login');
+
+        if ($request->user()->cannot('update', $ad)) {
+            abort(403);
+        }
 
         return view('ads.edit', compact('user', 'ad'));
     }
@@ -75,9 +89,10 @@ class AdController extends Controller
      */
     public function update(UpdateAdRequest $request, Ad $ad)
     {
-        /*$user = Auth::user();
+        $user = Auth::user();
 
-        if ($user == null) return redirect()->route('login');*/
+        if ($user == null) return redirect()->route('login');
+
         if ($request->user()->cannot('update', $ad)) {
             abort(403);
         }
@@ -88,12 +103,23 @@ class AdController extends Controller
 
         return redirect('dashboard');
     }
-
+   
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Ad $ad)
     {
-        //
+        
+        $user = Auth::user();
+
+        if ($user == null) return redirect()->route('login');
+        
+        if ($request->user()->cannot('delete', $ad)) {
+            abort(403);
+        }
+
+        $ad->delete();
+        return redirect('dashboard');
+
     }
 }

@@ -11,11 +11,12 @@ use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Ad;
 
 class LoginController extends Controller
 {
 
-    public function authenticate(Request $request): RedirectResponse
+    public function authenticate(Request $request, ? Ad $ad): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -24,7 +25,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard');
+            //dd($ad->id);
+            return empty($ad->id) ? redirect()->route('dashboard') : redirect()->route('ads.show', $ad->id);
+            
         }
 
         return back()->withErrors([

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->decimal('price', 6, 2);
+            $table->boolean('active');
             $table->boolean('priority');
             $table->timestamps();
         });

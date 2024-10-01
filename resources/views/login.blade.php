@@ -5,7 +5,7 @@
 @section('content')
 <h2>Login:</h2>
 
-<form action="{{ route('users.login') }}" method="POST">
+<form action="{{ route('users.login',  request()->ad ) }}" method="POST">
     @csrf
     <table>
 

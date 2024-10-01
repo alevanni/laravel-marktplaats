@@ -14,6 +14,7 @@ class Ad extends Model
         'title',
         'description',
         'price',
+        'active',
         'priority',
     ];
 

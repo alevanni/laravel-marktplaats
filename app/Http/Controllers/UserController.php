@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {   
         $user = Auth::user();
-        $ads = Ad::whereBelongsTo($user)->orderBy('created_at', 'desc')->get();
+        $ads = Ad::whereBelongsTo($user)->with('categories')->orderBy('created_at', 'desc')->orderBy('active', 'desc')->get();
         return view('dashboard', compact('user', 'ads'));
     }
 

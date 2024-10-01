@@ -27,3 +27,23 @@ table td {
     border: 1px solid black;
     display: inline-block;
 }
+
+.card li {
+    margin: 10px; 
+    display: inline-block;
+}
+
+.badge {
+    width: fit-content;
+    padding:  4px 8px;
+    border-radius: 5px;
+    background-color: antiquewhite;
+}
+
+.active {
+    background-color: lightgreen;
+}
+
+.inactive {
+    background-color: lightcoral;
+}
