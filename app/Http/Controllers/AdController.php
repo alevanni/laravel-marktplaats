@@ -8,6 +8,8 @@ use App\Http\Requests\StoreAdRequest;
 use App\Models\Ad;
 use App\Http\Requests\UpdateAdRequest;
 use App\Models\Bid;
+use App\Models\Category;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdController extends Controller
 {
@@ -17,8 +19,12 @@ class AdController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $ads = Ad::with('user', 'categories')->where('active', 1)->orderBy('created_at', 'desc')->get();
-        return view('index', compact('user', 'ads'));
+
+        $ads = Ad::with('user', 'categories')->where('active', 1)->orderBy('created_at', 'desc')->paginate(3);
+
+        $categories = Category::all();
+
+        return view('index', compact('user', 'ads', 'categories'));
     }
 
     /**
@@ -31,8 +37,9 @@ class AdController extends Controller
 
         if ($user == null) return redirect()->route('login');
 
-        else  return view('ads.create', compact('user'));
-        
+        $categories = Category::all();
+
+        return view('ads.create', compact('user', 'categories'));
     }
 
     /**
@@ -41,7 +48,7 @@ class AdController extends Controller
     public function store(StoreAdRequest $request)
     {
         $user = Auth::user();
-        
+
         if ($user == null) return redirect()->route('login');
         // is this useless?
         if ($request->user()->cannot('create', Ad::class)) {
@@ -51,8 +58,12 @@ class AdController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = $request->user()->id;
         $validated['priority'] = 0;
-        Ad::create($validated);
+        $validated['active'] = 1;
 
+        $ad = Ad::create($validated);
+        if ($request['category'] !== null) {
+            $ad->categories()->attach($request['category']);
+        }
         return redirect('dashboard');
     }
 
@@ -63,8 +74,8 @@ class AdController extends Controller
     {
         $user = Auth::user();
 
-        $bids=Bid::where('ad_id', $ad->id)->with('user')->orderBy('amount', 'desc')->get();
-        
+        $bids = Bid::where('ad_id', $ad->id)->with('user')->orderBy('amount', 'desc')->get();
+
         return view('ads.show', compact('user', 'ad', 'bids'));
     }
 
@@ -74,14 +85,16 @@ class AdController extends Controller
     public function edit(Request $request, Ad $ad)
     {
         $user = Auth::user();
-        
+
         if ($user == null) return redirect()->route('login');
 
         if ($request->user()->cannot('update', $ad)) {
             abort(403);
         }
-
-        return view('ads.edit', compact('user', 'ad'));
+        $categories = Category::whereDoesntHave('ads', function (Builder $query) use ($ad) {
+            $query->where('ad_id', $ad->id);
+        })->get();
+        return view('ads.edit', compact('user', 'ad', 'categories'));
     }
 
     /**
@@ -101,25 +114,26 @@ class AdController extends Controller
         $ad->timestamps = false;
         $ad->update($validated);
 
+        $ad->categories()->attach($request['category']);
+
         return redirect('dashboard');
     }
-   
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, Ad $ad)
     {
-        
+
         $user = Auth::user();
 
         if ($user == null) return redirect()->route('login');
-        
+
         if ($request->user()->cannot('delete', $ad)) {
             abort(403);
         }
 
         $ad->delete();
         return redirect('dashboard');
-
     }
 }

@@ -28,11 +28,13 @@ class BidPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(?User $user, Ad $ad): Response
+    public function create(User $user, Ad $ad): bool
     {
-        return $user->id !== $ad->user_id
-        ? Response::allow()
-        : Response::denyWithStatus(403);
+        //dd($ad);
+        return $user->id === $ad->user_id;
+        // return $user->id === $ad->user_id
+        //     ? Response::denyWithStatus(403)
+        //     : Response::allow();
     }
 
     /**

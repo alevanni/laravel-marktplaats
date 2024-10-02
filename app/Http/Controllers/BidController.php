@@ -30,14 +30,15 @@ class BidController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreBidRequest $request, Ad $ad)
-    {  
-         $user = Auth::user();
-        
-        if ($user == null) return redirect()->route('login', $ad->id); 
+    {
+        $user = Auth::user();
 
-        if ($request->user()->cannot('create', $ad, Bid::class)) {
-            abort(403);
+        if ($user == null) return redirect()->route('login', $ad->id);
+
+        if ($request->user()->cannot('createBid', $ad)) {
+            return back()->withErrors(['message' => 'You cannot bid on your own ad.']);
         }
+
         $validated = $request->validated();
         $validated['user_id'] = $user->id;
 

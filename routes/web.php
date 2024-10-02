@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\BidController;
-
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', [AdController::class, 'index'])->name('index');
 
@@ -27,6 +27,8 @@ Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
 Route::get('/ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
 Route::put('/ads/{ad}/edit', [AdController::class, 'update'])->name('ads.update');
 Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+
+Route::get('/category', [CategoryController::class, 'show'])->name('categories.show');
 
 // BIDS
 Route::post('ads/{ad}', [BidController::class, 'store'])->name('bids.store');

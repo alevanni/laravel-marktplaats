@@ -1,5 +1,5 @@
-<div class="card">
-    
+<div class="card {{ $ad->active ? 'active' : 'inactive' }}">
+
     <h2>{{ $ad->title}}</h2>
     <h3>{{$ad->price}} &#8364;</h3>
     <p>{{ $ad->created_at }}</p>

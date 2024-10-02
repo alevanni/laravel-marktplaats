@@ -29,6 +29,7 @@ class AdPolicy
      */
     public function create(?User $user): Response
     {
+
         return $user !== null ? Response::allow() : Response::deny('You have to be logged in to create new ads.');
     }
 
@@ -66,5 +67,15 @@ class AdPolicy
     public function forceDelete(User $user, Ad $ad): bool
     {
         return true;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function createBid(User $user, Ad $ad): Response
+    {
+        return $user->id === $ad->user_id
+            ? Response::denyWithStatus(403)
+            : Response::allow();
     }
 }
