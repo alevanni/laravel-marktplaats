@@ -20,11 +20,26 @@ class AdController extends Controller
     {
         $user = Auth::user();
 
-        $ads = Ad::with('user', 'categories')->where('active', 1)->orderBy('created_at', 'desc')->paginate(3);
+        $ads = Ad::with('user', 'categories')->where('active', 1)->orderBy('created_at', 'desc')->paginate(20);
 
         $categories = Category::all();
 
         return view('index', compact('user', 'ads', 'categories'));
+    }
+    /**
+     * Display the search results.
+     */
+    public function search(Request $request) {
+        
+       $user = Auth::user();
+       $categories = Category::all();
+
+       $keyword = $request->keyword;
+
+       $ads = Ad::whereAny(['title', 'description'], 'like', '%'.$keyword.'%')->where('active', 1)->orderBy('created_at', 'desc')->paginate(20);
+
+       return view('index', compact('user', 'ads', 'categories'));
+
     }
 
     /**

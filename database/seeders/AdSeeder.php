@@ -16,11 +16,11 @@ class AdSeeder extends Seeder
     {
        $categories = Category::all();
 
-       $ads = Ad::factory()->count(20)->create();
+       $ads = Ad::factory()->count(100)->create();
 
        $ads->each( function ($article) use ($categories) {
           $article->categories()->attach(
-            $categories->random(rand(0, 3))->pluck('id')->toArray()
+            $categories->random(rand(0, 4))->pluck('id')->toArray()
           );
        }
 

@@ -47,3 +47,13 @@ table td {
 .inactive {
     background-color: lightcoral;
 }
+
+.results {
+    background-color: lightcoral;
+}
+
+.pagination-links {
+    padding: 10px;
+    border: 1px solid black;
+    margin: 10px;
+}

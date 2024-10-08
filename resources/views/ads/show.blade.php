@@ -23,6 +23,7 @@
      @include('partials.create-bid')
      @endif
 
+     <a href="{{ route('messages.create',  $ad->id) }}">Inquire on this ad</a>
 
      @foreach ( $bids as $bid)
      @include('partials.bid', [ 'bid' => $bid])

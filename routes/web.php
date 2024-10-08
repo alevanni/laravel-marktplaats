@@ -28,10 +28,17 @@ Route::get('/ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
 Route::put('/ads/{ad}/edit', [AdController::class, 'update'])->name('ads.update');
 Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
 
+// FILTER BY CATEGORY
 Route::get('/category', [CategoryController::class, 'show'])->name('categories.show');
+
+// SEARCH BY KEYWORD
+Route::get('/search', [AdController::class, 'search'])->name('index.search');
 
 // BIDS
 Route::post('ads/{ad}', [BidController::class, 'store'])->name('bids.store');
+
+// MESSAGES
+Route::get('messages/{ad?}', function() { return view('messages.create'); })->name('messages.create');
 
 // PASSWORD UPDATE ROUTES, IN ORDER OF APPEARANCE
 

@@ -47,10 +47,10 @@ class CategoryController extends Controller
 
                 $ads = Ad::with('categories', 'user')->whereHas('categories', function (Builder $query) use ($request) {
                     $query->where('category_id', $request['category']);
-                })->where('active', 1)->orderBy('created_at', 'desc')->paginate(3);
+                })->where('active', 1)->orderBy('created_at', 'desc')->paginate(20);
             } else {
 
-                $ads = Ad::doesntHave('categories')->paginate(3);
+                $ads = Ad::doesntHave('categories')->paginate(20);
             }
 
             $categories = Category::all();
