@@ -4,10 +4,11 @@
         @if ( empty($user) )
         <li><a href="{{ route('register') }}">Register</a></li>
         <li><a href="{{ route('login') }}">Login</a></li>
-        @else 
+        @else
         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
         <li><a href="{{ route('users.logout') }}">Logout</a></li>
+        <li><a href="{{ route('messages.index') }}">Messages</a></li>
         @endif
-        
+
     </ul>
 </nav>

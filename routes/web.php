@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', [AdController::class, 'index'])->name('index');
 
@@ -38,7 +39,9 @@ Route::get('/search', [AdController::class, 'search'])->name('index.search');
 Route::post('ads/{ad}', [BidController::class, 'store'])->name('bids.store');
 
 // MESSAGES
-Route::get('messages/{ad?}', function() { return view('messages.create'); })->name('messages.create');
+Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+Route::get('messages/create', [MessageController::class, 'create'])->name('messages.create');
+Route::post('messages/create', [MessageController::class, 'store'])->name('messages.store');
 
 // PASSWORD UPDATE ROUTES, IN ORDER OF APPEARANCE
 
