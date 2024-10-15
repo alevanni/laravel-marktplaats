@@ -47,11 +47,11 @@ table td {
 .inactive {
     background-color: lightcoral;
 }
-
+/*
 .results {
     background-color: lightcoral;
 }
-
+*/
 .pagination-links {
     padding: 10px;
     border: 1px solid black;
@@ -65,4 +65,8 @@ table td {
 .message table {
     margin: 10px;
     border: 1px solid black;
+}
+
+.bid {
+    list-style-type: "\1F4B8";
 }

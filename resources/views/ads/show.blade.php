@@ -24,9 +24,11 @@
      @endif
 
      <a href="{{ route('messages.create') }}">Send a message about this ad</a>
-
+     <ul>
      @foreach ( $bids as $bid)
      @include('partials.bid', [ 'bid' => $bid])
      @endforeach
+     </ul>
+     
 </div>
 @endsection

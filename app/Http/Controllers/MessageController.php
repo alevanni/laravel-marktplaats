@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewMessageReceived;
 
 class MessageController extends Controller
 {
@@ -18,9 +20,9 @@ class MessageController extends Controller
         $user = Auth::user();
         if ($user == null) return redirect()->route('login');
 
-        $receivedMessages = Message::where('receiver_id', $user->id)->with('sender')->get();
+        $receivedMessages = Message::where('receiver_id', $user->id)->with('sender')->orderBy('created_at', 'desc')->paginate(5, ['*'], 'received');
 
-        $sentMessages = Message::where('sender_id', $user->id)->with('receiver')->get();
+        $sentMessages = Message::where('sender_id', $user->id)->with('receiver')->orderBy('created_at', 'desc')->paginate(5, ['*'], 'sent');
 
         return view('messages.index', compact('user', 'receivedMessages', 'sentMessages'));
     }
@@ -50,7 +52,10 @@ class MessageController extends Controller
 
         $validated = $request->validated();
         $validated['sender_id'] = $user->id;
-        Message::create($validated);
+
+        $message = Message::create($validated);
+
+        Mail::to($message->receiver)->send(new NewMessageReceived($message));
         return redirect()->route('messages.index');
     }
 

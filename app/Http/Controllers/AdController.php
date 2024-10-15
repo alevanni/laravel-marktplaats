@@ -11,6 +11,8 @@ use App\Models\Bid;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AdController extends Controller
 {
     /**
@@ -36,7 +38,7 @@ class AdController extends Controller
 
        $keyword = $request->keyword;
 
-       $ads = Ad::whereAny(['title', 'description'], 'like', '%'.$keyword.'%')->where('active', 1)->orderBy('created_at', 'desc')->paginate(20);
+       $ads = Ad::whereAny(['title', 'description'], 'like', '%'.$keyword.'%')->where('active', 1)->orderBy('updated_at', 'desc')->orderBy('priority', 'desc')->paginate(20);
 
        return view('index', compact('user', 'ads', 'categories'));
 
@@ -72,7 +74,8 @@ class AdController extends Controller
 
         $validated = $request->validated();
         $validated['user_id'] = $request->user()->id;
-        $validated['priority'] = 0;
+        
+        $validated['priority'] = isset($request['priority']) ?: 0;
         $validated['active'] = 1;
 
         $ad = Ad::create($validated);
@@ -126,7 +129,11 @@ class AdController extends Controller
         }
 
         $validated = $request->validated();
-        $ad->timestamps = false;
+        if ($request->priority === null) {
+            $ad->timestamps = false; // it only gets updated when we pay
+        }
+        else $validated['priority'] = 1;
+
         $ad->update($validated);
 
         $ad->categories()->attach($request['category']);

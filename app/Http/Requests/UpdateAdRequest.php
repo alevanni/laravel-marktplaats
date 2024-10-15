@@ -24,7 +24,8 @@ class UpdateAdRequest extends FormRequest
         return [
             'title' => 'required|max:100',
             'description' => 'required|max:1000',
-            'price' => 'required|numeric|min:0.1|max:10000'
+            'price' => 'required|numeric|min:0.1|max:10000',
+            
         ];
     }
 }

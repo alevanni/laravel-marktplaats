@@ -77,4 +77,22 @@ class UserController extends Controller
     {
         //
     }
+    /**
+     * Update the notifications settings
+     */
+    public function updateNotifications(Request $request) {
+        
+        $user = Auth::user();
+
+        if ($user == null) return redirect()->route('login');
+        
+        $user = User::find(Auth::user()->id);
+
+        $current = $user->enable_notifications;
+
+        $user->enable_notifications = ($current + $request['enable_notifications']) %2 ;
+        $user -> save();
+        
+        return redirect()->route('dashboard');
+    }
 }

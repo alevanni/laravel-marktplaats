@@ -28,6 +28,7 @@ Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
 Route::get('/ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
 Route::put('/ads/{ad}/edit', [AdController::class, 'update'])->name('ads.update');
 Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+//Route::put('ads/{ad}/upgrade', )
 
 // FILTER BY CATEGORY
 Route::get('/category', [CategoryController::class, 'show'])->name('categories.show');
@@ -42,6 +43,9 @@ Route::post('ads/{ad}', [BidController::class, 'store'])->name('bids.store');
 Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
 Route::get('messages/create', [MessageController::class, 'create'])->name('messages.create');
 Route::post('messages/create', [MessageController::class, 'store'])->name('messages.store');
+
+// NOTIFICATIONS 
+Route::put('/dashboard/update-notifications', [UserController::class, 'updateNotifications'])->name('dashboard.update-notifications');
 
 // PASSWORD UPDATE ROUTES, IN ORDER OF APPEARANCE
 

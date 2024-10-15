@@ -20,6 +20,7 @@
             <td><input type="number" min="0.00" max="10000.00" step="0.01" name="price" /> &#8364;</td>
         </tr>
         @include('partials.categories-select')
+        @include('partials.upgrade-ad')
         <tr>
             <td colspan="2"><button type="submit">Save</button></td>
         </tr>
