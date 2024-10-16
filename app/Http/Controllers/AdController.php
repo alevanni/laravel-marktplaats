@@ -31,17 +31,17 @@ class AdController extends Controller
     /**
      * Display the search results.
      */
-    public function search(Request $request) {
-        
-       $user = Auth::user();
-       $categories = Category::all();
+    public function search(Request $request)
+    {
 
-       $keyword = $request->keyword;
+        $user = Auth::user();
+        $categories = Category::all();
 
-       $ads = Ad::whereAny(['title', 'description'], 'like', '%'.$keyword.'%')->where('active', 1)->orderBy('updated_at', 'desc')->orderBy('priority', 'desc')->paginate(20);
+        $keyword = $request->keyword;
 
-       return view('index', compact('user', 'ads', 'categories'));
+        $ads = Ad::whereAny(['title', 'description'], 'like', '%' . $keyword . '%')->where('active', 1)->orderBy('priority', 'desc')->orderBy('updated_at', 'desc')->paginate(20)->withQueryString();
 
+        return view('index', compact('user', 'ads', 'categories'));
     }
 
     /**
@@ -74,7 +74,7 @@ class AdController extends Controller
 
         $validated = $request->validated();
         $validated['user_id'] = $request->user()->id;
-        
+
         $validated['priority'] = isset($request['priority']) ?: 0;
         $validated['active'] = 1;
 
@@ -131,8 +131,7 @@ class AdController extends Controller
         $validated = $request->validated();
         if ($request->priority === null) {
             $ad->timestamps = false; // it only gets updated when we pay
-        }
-        else $validated['priority'] = 1;
+        } else $validated['priority'] = 1;
 
         $ad->update($validated);
 

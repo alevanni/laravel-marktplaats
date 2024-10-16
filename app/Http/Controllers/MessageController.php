@@ -55,7 +55,12 @@ class MessageController extends Controller
 
         $message = Message::create($validated);
 
-        Mail::to($message->receiver)->send(new NewMessageReceived($message));
+        //dd($message->receiver->enable_notifications);
+
+        if ($message->receiver->enable_notifications) {
+            Mail::to($message->receiver)->send(new NewMessageReceived($message));
+        }
+
         return redirect()->route('messages.index');
     }
 

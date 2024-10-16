@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -16,7 +17,7 @@ use App\Models\Ad;
 class LoginController extends Controller
 {
 
-    public function authenticate(Request $request, ? Ad $ad): RedirectResponse
+    public function authenticate(Request $request, ?Ad $ad): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -24,10 +25,10 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
-            //dd($ad->id);
+
             return empty($ad->id) ? redirect()->route('dashboard') : redirect()->route('ads.show', $ad->id);
-            
         }
 
         return back()->withErrors([
@@ -66,13 +67,9 @@ class LoginController extends Controller
         return view('reset-password', ['token' => $token]);
     }
     /* Updates the password in the database*/
-    public function passwordUpdate(Request $request)
+    public function passwordUpdate(UpdatePasswordRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $request->validated();
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
